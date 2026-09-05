@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 760">
+<rect width="700" height="760" rx="30" fill="#F8F8F8"/>
+<image href="savannaguard-icon.svg" x="145" y="30" width="410" height="410"/>
+<text x="350" y="535" text-anchor="middle" font-family="Arial,sans-serif" font-size="62" font-weight="700" fill="#111">Savanna<tspan fill="#4CAF50">Guard</tspan></text>
+<text x="350" y="595" text-anchor="middle" font-family="Arial,sans-serif" font-size="29" letter-spacing="7" fill="#111">WEB BROWSER</text>
+<text x="350" y="650" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" fill="#0B3D2E">Private. Secure. African.</text>
+</svg>
