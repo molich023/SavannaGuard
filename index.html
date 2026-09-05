@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https:; connect-src https:;">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SavannaGuard Browser</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><div class="mark">SG</div><div><strong>SavannaGuard</strong><small>Private • Open Source • Africa First</small></div></div>
+  <div class="toolbar">
+    <button id="back">←</button><button id="forward">→</button><button id="reload">↻</button>
+    <input id="address" placeholder="Search privately or enter a URL" autocomplete="off">
+    <button id="go">Go</button>
+  </div>
+  <div class="actions">
+    <select id="lang"><option value="en">English</option><option value="sw">Kiswahili</option></select>
+    <button id="shield">🛡 Shield ON</button>
+    <button id="settings">⚙</button>
+  </div>
+</header>
+
+<main>
+<section id="home" class="home">
+  <div class="hero">
+    <p class="eyebrow">SAVANNAGUARD DAILY</p>
+    <h1 id="headline">Africa, at a glance.</h1>
+    <p id="sub">Independent privacy. Local control. No Google affiliation.</p>
+    <div class="searchbox"><span>⌕</span><input id="homeSearch" placeholder="Search the web without Google"><button id="homeGo">Search</button></div>
+    <div class="chips">
+      <button data-q="Africa technology news">Technology</button>
+      <button data-q="Africa health news">Health</button>
+      <button data-q="Africa business news">Business</button>
+      <button data-q="Africa fashion news">Fashion</button>
+      <button data-q="Africa climate news">Climate</button>
+      <button data-q="Africa science news">Science</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <article class="panel">
+      <div class="panelhead"><h2>🌍 Africa — latest</h2><span id="feedStatus">RSS</span></div>
+      <div id="africaNews" class="news"></div>
+    </article>
+    <article class="panel">
+      <div class="panelhead"><h2>🌐 World — latest</h2></div>
+      <div id="worldNews" class="news"></div>
+    </article>
+  </div>
+
+  <div class="cards">
+    <button class="feature" data-url="https://www.openstreetmap.org/">🗺 <b>Open street map</b><span>Open-source mapping, with attribution.</span></button>
+    <button class="feature" data-url="https://searx.space/">⌕ <b>Privacy search</b><span>Use a self-hosted SearXNG instance in Settings.</span></button>
+    <button class="feature" data-url="https://www.torproject.org/">◉ <b>Anonymous routing</b><span>Optional Tor integration for advanced users.</span></button>
+    <button class="feature" data-url="https://owasp.org/">🛡 <b>Security standards</b><span>OWASP-inspired secure defaults.</span></button>
+  </div>
+</section>
+
+<section id="browser" class="browser hidden">
+  <div class="tabbar"><span id="pageTitle">Private tab</span><button id="homeBtn">⌂ Home</button></div>
+  <webview id="view" partition="persist:savanna" allowpopups></webview>
+</section>
+</main>
+
+<dialog id="settingsDialog">
+  <h2>Privacy settings</h2>
+  <label><input type="checkbox" checked disabled> HTTPS/TLS preferred</label>
+  <label><input type="checkbox" checked> Block common ad/tracker domains</label>
+  <label><input type="checkbox" checked> Block third-party cookies where supported</label>
+  <label><input type="checkbox" checked> No referrer header</label>
+  <label>Private search endpoint
+    <input id="searchEndpoint" placeholder="https://your-searxng.example/search?q=">
+  </label>
+  <label>Optional VPN / proxy endpoint
+    <input id="proxyInfo" placeholder="Configure at OS/network level">
+  </label>
+  <p class="note">A browser cannot create a secure VPN tunnel by itself merely by displaying a setting. Use a trusted VPN/Tor client or OS-level tunnel; never paste VPN credentials into this app.</p>
+  <div class="dialogActions"><button id="clear">Clear local browser data</button><button id="closeSettings">Close</button></div>
+</dialog>
+
+<footer>© 2026 SavannaGuard • Privacy-first prototype • Built without Google services • Map data: OpenStreetMap contributors</footer>
+<script src="renderer.js"></script>
+</body>
+</html>
