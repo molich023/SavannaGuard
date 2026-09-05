@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08111f"><meta name="description" content="SavannaGuard privacy-first browser web edition">
+<link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css">
+<title>SavannaGuard Browser</title>
+</head>
+<body>
+<header class="topbar">
+<button id="menuBtn" class="icon">☰</button>
+<div class="brand"><div class="logo">🛡️</div><div><b>SavannaGuard</b><small>Privacy Browser</small></div></div>
+<div class="protected">● Protected</div><button id="settingsBtn" class="icon">⚙</button>
+</header>
+<main>
+<section class="browserbar">
+<button id="backBtn" class="nav">‹</button><button id="forwardBtn" class="nav">›</button><button id="reloadBtn" class="nav">↻</button>
+<form id="addressForm" class="address"><span>🔒</span><input id="addressInput" placeholder="Search privately or enter a web address" autocomplete="off"><button>Go</button></form>
+</section>
+
+<section id="homeView">
+<div class="hero">
+<div class="eyebrow">AFRICA-FIRST • PRIVACY-FIRST • OPEN WEB</div>
+<h1>Browse with confidence.</h1>
+<p>Search, discover news, maps and security resources without building a profile of your activity.</p>
+<form id="heroSearch" class="heroSearch"><input id="heroInput" placeholder="Search the open web…" autocomplete="off">
+<select id="engineSelect"><option value="https://html.duckduckgo.com/html/?q=">DuckDuckGo</option><option value="https://www.bing.com/search?q=">Bing</option><option value="https://www.google.com/search?q=">Google</option></select><button>Search</button></form>
+<div class="quick"><button data-url="https://www.openstreetmap.org/">🗺️ OpenStreetMap</button><button data-url="https://owasp.org/">🛡️ OWASP</button><button data-url="https://www.wikipedia.org/">📚 Wikipedia</button><button data-url="https://www.mozilla.org/">🦊 Mozilla</button></div>
+</div>
+
+<div class="grid">
+<article class="panel"><div class="title"><h2>🌍 Africa & World</h2><button id="refreshNews">Refresh</button></div><div id="newsList"></div><small class="muted">Links open directly at publishers. This preview does not use a tracking proxy.</small></article>
+<article class="panel"><div class="title"><h2>🧭 Privacy Center</h2></div>
+<div class="row">Tracker blocking <b class="on">ON</b></div><div class="row">Ad blocking <b class="on">ON</b></div><div class="row">Cookie protection <b class="on">ON</b></div><div class="row">Local history <b id="historyCount">0</b></div>
+<button id="clearData" class="danger">Clear local browsing data</button></article>
+<article class="panel"><div class="title"><h2>🛡️ Security Hub</h2></div>
+<div class="resource"><span><b>OWASP Top 10</b><small>Web application security</small></span><button data-url="https://owasp.org/www-project-top-ten/">Open</button></div>
+<div class="resource"><span><b>OWASP API Security</b><small>API risks & defenses</small></span><button data-url="https://owasp.org/API-Security/">Open</button></div>
+<div class="resource"><span><b>NIST Cybersecurity</b><small>Security framework</small></span><button data-url="https://www.nist.gov/cyberframework">Open</button></div>
+</article>
+<article class="panel"><div class="title"><h2>⭐ Bookmarks</h2><button id="addBookmark">Add current</button></div><div id="bookmarkList"></div></article>
+</div>
+<div class="notice"><b>Private by design</b><span>This Netlify edition is a web/PWA test interface. A website cannot provide the same network-control powers as a native browser engine. Production SavannaGuard will enforce blocking at the browser layer.</span></div>
+</section>
+
+<section id="webView" class="webview hidden"><div class="webhead"><span id="pageStatus">Ready</span><button id="openExternal">Open in browser</button></div>
+<div class="destination"><div>🌐</div><h2 id="destinationTitle">Ready to browse</h2><p id="destinationText">Choose “Open in browser” to visit the destination. This preview does not proxy or bypass iframe restrictions.</p><button id="destinationOpen" class="primary">Open destination</button></div></section>
+</main>
+
+<aside id="sideMenu"><div class="sidehead"><b>SavannaGuard</b><button id="closeMenu">×</button></div>
+<button data-action="home">⌂ Home</button><button data-action="bookmarks">★ Bookmarks</button><button data-action="history">◷ History</button><button data-action="settings">⚙ Settings</button><hr>
+<a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://owasp.org/" target="_blank" rel="noopener noreferrer">OWASP</a></aside><div id="scrim" class="scrim hidden"></div>
+
+<dialog id="settingsDialog"><form method="dialog" class="dialog"><div class="title"><h2>Settings</h2><button>×</button></div>
+<label>Language<select id="language"><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
+<label>Block ads <input id="adsToggle" type="checkbox" checked></label><label>Block trackers <input id="trackersToggle" type="checkbox" checked></label><label>Cookie popup protection <input id="cookieToggle" type="checkbox" checked></label>
+<button id="saveSettings" class="primary">Save settings</button></form></dialog>
+<footer>© 2026 SavannaGuard • Privacy-first open-source browser project</footer>
+<script src="app.js" defer></script>
+</body></html>
