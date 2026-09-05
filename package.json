@@ -1,0 +1,16 @@
+{
+  "name": "savannaguard-browser",
+  "version": "0.2.0",
+  "description": "SavannaGuard \u2014 privacy-first open-source browser prototype.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "lint": "node --check src/main.js && node --check src/preload.js && node --check src/renderer.js",
+    "test": "node --check src/main.js && node --check src/preload.js && node --check src/renderer.js"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0"
+  },
+  "license": "MPL-2.0"
+}
