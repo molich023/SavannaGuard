@@ -1,0 +1,13 @@
+# SavannaGuard Code Owners
+#
+# Add the GitHub usernames of trusted maintainers below.
+#
+# Example:
+# * @molich023
+#
+# Security-sensitive files can later have dedicated reviewers.
+
+.github/workflows/ @your-github-username
+src/ @your-github-username
+docs/SECURITY.md @your-github-username
+package.json @your-github-username
