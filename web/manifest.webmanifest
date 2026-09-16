@@ -1,24 +1,14 @@
 {
-  "name": "Savanna Browser",
-  "short_name": "Savanna",
-  "description": "Private. Secure. African.",
+  "name": "SavannaGuard Browser",
+  "short_name": "SavannaGuard",
+  "description": "Africa first, privacy first, open web.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#061C17",
+  "background_color": "#061611",
   "theme_color": "#0B3D2E",
   "icons": [
-    {
-      "src": "/android-chrome-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/android-chrome-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    {"src":"/android-chrome-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"/android-chrome-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ]
 }
