@@ -1,1 +1,8 @@
-
+// Bounded sitemap crawler for approved seeds. Separate Worker; use a Cron trigger.
+const MAX_URLS=40,MAX_BYTES=250000;
+function http(v){try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}}
+function text(h){return h.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;/gi,' ').replace(/&amp;/gi,'&').replace(/\s+/g,' ').trim().slice(0,12000)}
+function title(h){const m=h.match(/<title[^>]*>([\s\S]*?)<\/title>/i);return m?text(m[1]).slice(0,300):''}
+function locs(x){return[...x.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/gi)].map(m=>http(m[1])).filter(Boolean).slice(0,MAX_URLS)}
+async function allowed(url){try{const u=new URL(url),r=await fetch(`${u.origin}/robots.txt`,{headers:{'user-agent':'SavannaSearchBot/0.5'}});if(!r.ok)return true;const s=await r.text();const block=s.split(/\n\s*user-agent:\s*/i).find(x=>/^\*/.test(x.trim()))||'';return !/^\s*disallow:\s*\/\s*$/im.test(block)}catch{return true}}
+export default{async scheduled(_event,env){if(!env.SAVANNA_SEEDS||!env.INGEST_URL||!env.SEARCH_ADMIN_TOKEN)return;const seeds=env.SAVANNA_SEEDS.split(',').map(http).filter(Boolean).slice(0,10),docs=[];for(const seed of seeds){if(!(await allowed(seed)))continue;try{const r=await fetch(seed,{headers:{'user-agent':'SavannaSearchBot/0.5'}});if(!r.ok)continue;for(const url of locs((await r.text()).slice(0,1000000))){if(!(await allowed(url)))continue;const p=await fetch(url,{headers:{'user-agent':'SavannaSearchBot/0.5'}});if(!p.ok)continue;const html=(await p.text()).slice(0,MAX_BYTES),body=text(html);docs.push({url,title:title(html)||url,description:body.slice(0,700),content:body,source_type:'web'});if(docs.length>=40)break}}catch{}}if(docs.length)await fetch(env.INGEST_URL,{method:'POST',headers:{'content-type':'application/json',authorization:`Bearer ${env.SEARCH_ADMIN_TOKEN}`},body:JSON.stringify({documents:docs})})}}}
