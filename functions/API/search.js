@@ -1,13 +1,9 @@
-function clean(value,max=600){return String(value||"").replace(/[<>]/g,"").slice(0,max)}
-export async function onRequestGet(context){
-  const q=new URL(context.request.url).searchParams.get("q")?.trim();
-  if(!q)return Response.json({articles:[]});
-  try{
-    const url=`https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(q)}&mode=artlist&maxrecords=30&format=json&sort=HybridRel&timespan=7d`;
-    const r=await fetch(url,{headers:{"Accept":"application/json"}});
-    if(!r.ok)throw new Error("upstream");
-    const data=await r.json();
-    const articles=(data.articles||[]).map(a=>({title:clean(a.title,240),description:clean(a.domain||a.sourcecountry||"Open-web result",180),url:a.url,source:clean(a.domain||a.sourcecountry||"Source",100),date:a.seendate||""})).filter(a=>a.title&&a.url);
-    return Response.json({query:q,articles},{headers:{"Cache-Control":"public, max-age=120, s-maxage=120"}});
-  }catch(error){return Response.json({query:q,articles:[],error:"search_unavailable"},{status:502});}
-}
+const MAX_QUERY=240;
+const ALLOWED_PROTOCOLS=new Set(['http:','https:']);
+function json(body,status=200,cache='no-store'){return new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':cache,'x-content-type-options':'nosniff','referrer-policy':'no-referrer','x-frame-options':'DENY','content-security-policy':"default-src 'none'; frame-ancestors 'none'"}})}
+function cleanUrl(v){try{const u=new URL(String(v));return ALLOWED_PROTOCOLS.has(u.protocol)?u.href:null}catch{return null}}
+function cleanText(v,max=5000){return String(v??'').replace(/[\u0000-\u001F\u007F]/g,' ').trim().slice(0,max)}
+function tokenize(q){return q.toLowerCase().split(/\s+/).map(x=>x.replace(/[^\p{L}\p{N}-]/gu,'')).filter(x=>x.length>1).slice(0,12)}
+function rank(row,tokens){const title=String(row.title||'').toLowerCase(),body=`${row.description||''} ${row.content||''}`.toLowerCase();let score=0;for(const t of tokens){if(title.includes(t))score+=8;if(body.includes(t))score+=2}if(/(africa|kenya|uganda|tanzania|rwanda|ethiopia|ghana|nigeria|south africa|senegal|zambia|zimbabwe|mozambique|namibia|botswana|malawi|burundi|somalia|sudan|egypt|morocco|tunisia|algeria)/i.test(`${row.title} ${row.description} ${row.country} ${row.region}`))score+=3;const d=Date.parse(row.published_at||row.crawled_at||'');if(!Number.isNaN(d)){const days=Math.max(0,(Date.now()-d)/86400000);score+=Math.max(0,5-Math.min(5,days/2))}return score}
+async function upstream(query){const u=new URL('https://api.gdeltproject.org/api/v2/doc/doc');u.searchParams.set('query',query);u.searchParams.set('mode','artlist');u.searchParams.set('format','json');u.searchParams.set('maxrecords','30');u.searchParams.set('timespan','7d');u.searchParams.set('sort','datedesc');const c=new AbortController(),t=setTimeout(()=>c.abort(),7000);try{const r=await fetch(u,{signal:c.signal,headers:{accept:'application/json'}});if(!r.ok)throw Error();const d=await r.json();return(Array.isArray(d.articles)?d.articles:[]).map(a=>({title:cleanText(a.title,300),description:cleanText(a.description||'',700),url:cleanUrl(a.url),source:cleanText(a.domain||'Web',120),date:a.seendate||a.datetime||null,score:0})).filter(x=>x.url&&x.title)}finally{clearTimeout(t)}}
+export async function onRequestGet(context){const raw=new URL(context.request.url).searchParams.get('q');if(typeof raw!=='string'||!raw.trim()||raw.length>MAX_QUERY)return json({ok:false,error:'Invalid search query.'},400);const query=raw.normalize('NFKC').trim();if(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(query))return json({ok:false,error:'Invalid search query.'},400);const tokens=tokenize(query);let articles=[],indexed=false;try{if(context.env.DB&&tokens.length){const match=tokens.map(t=>`"${t.replaceAll('"','')}"`).join(' OR ');const rs=await context.env.DB.prepare('SELECT d.id,d.url,d.title,d.description,d.content,d.language,d.country,d.region,d.source_type,d.image_url,d.published_at,d.crawled_at FROM documents_fts f JOIN documents d ON d.rowid=f.rowid WHERE documents_fts MATCH ? LIMIT 80').bind(match).all();articles=(rs.results||[]).map(r=>({...r,source:r.source_type||'Savanna Index',date:r.published_at||r.crawled_at,score:rank(r,tokens)})).sort((a,b)=>b.score-a.score).slice(0,30);indexed=articles.length>0}}catch{}if(!indexed)articles=await upstream(query).catch(()=>[]);return json({ok:true,engine:'Savanna Search',version:'0.5',query,indexed,articles},200,'private, max-age=30')}
