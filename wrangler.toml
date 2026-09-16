@@ -1,0 +1,6 @@
+name = "savanna-search-crawler"
+main = "workers/crawler.js"
+compatibility_date = "2026-09-17"
+[triggers]
+crons = ["17 * * * *"]
+# Set SEARCH_ADMIN_TOKEN, INGEST_URL and SAVANNA_SEEDS as Cloudflare secrets/vars.
