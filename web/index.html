@@ -1,60 +1,142 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#08111f"><meta name="description" content="SavannaGuard privacy-first browser web edition">
-<link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css">
-<title>SavannaGuard Browser</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D2E">
+<meta name="description" content="SavannaGuard — Africa first, privacy first, open web.">
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/style.css">
+<title>SavannaGuard — Africa first, privacy first, open web</title>
 </head>
 <body>
 <header class="topbar">
-<button id="menuBtn" class="icon">☰</button>
-<div class="brand"><div class="logo">🛡️</div><div><b>SavannaGuard</b><small>Privacy Browser</small></div></div>
-<div class="protected">● Protected</div><button id="settingsBtn" class="icon">⚙</button>
+  <button id="menuBtn" class="icon" aria-label="Open menu">☰</button>
+  <a class="brand" href="/" aria-label="SavannaGuard home">
+    <img src="/branding/savannaguard-icon.png" alt="" class="brandIcon">
+    <span class="brandText"><b>SavannaGuard</b><small data-i18n="tagline">Africa first · Privacy first · Open web</small></span>
+  </a>
+  <div class="profileBadge" id="profileBadge" aria-label="Active local profile">● <span id="welcomeShort">Guest</span></div>
+  <button id="settingsBtn" class="icon" aria-label="Settings">⚙</button>
 </header>
+
 <main>
-<section class="browserbar">
-<button id="backBtn" class="nav">‹</button><button id="forwardBtn" class="nav">›</button><button id="reloadBtn" class="nav">↻</button>
-<form id="addressForm" class="address"><span>🔒</span><input id="addressInput" placeholder="Search privately or enter a web address" autocomplete="off"><button>Go</button></form>
-</section>
+  <section class="browserbar" aria-label="Browser controls">
+    <button id="backBtn" class="nav" aria-label="Back">‹</button>
+    <button id="forwardBtn" class="nav" aria-label="Forward">›</button>
+    <button id="reloadBtn" class="nav" aria-label="Refresh">↻</button>
+    <form id="addressForm" class="address">
+      <span aria-hidden="true">⌕</span>
+      <input id="addressInput" placeholder="Browse in confidence" autocomplete="off" aria-label="Address or search">
+      <button type="submit" data-i18n="go">Go</button>
+    </form>
+  </section>
 
-<section id="homeView">
-<div class="hero">
-<div class="eyebrow">AFRICA-FIRST • PRIVACY-FIRST • OPEN WEB</div>
-<h1>Browse with confidence.</h1>
-<p>Search, discover news, maps and security resources without building a profile of your activity.</p>
-<form id="heroSearch" class="heroSearch"><input id="heroInput" placeholder="Search the open web…" autocomplete="off">
-<select id="engineSelect"><option value="https://html.duckduckgo.com/html/?q=">DuckDuckGo</option><option value="https://www.bing.com/search?q=">Bing</option><option value="https://www.google.com/search?q=">Google</option></select><button>Search</button></form>
-<div class="quick"><button data-url="https://www.openstreetmap.org/">🗺️ OpenStreetMap</button><button data-url="https://owasp.org/">🛡️ OWASP</button><button data-url="https://www.wikipedia.org/">📚 Wikipedia</button><button data-url="https://www.mozilla.org/">🦊 Mozilla</button></div>
-</div>
+  <section id="homeView">
+    <div class="hero">
+      <img class="heroLogo" src="/branding/savannaguard-logo-horizontal.png" alt="SavannaGuard — Private. Secure. African.">
+      <div class="eyebrow" data-i18n="eyebrow">AFRICA FIRST · PRIVACY FIRST · OPEN WEB</div>
+      <h1 data-i18n="heroTitle">Browse in confidence.</h1>
+      <p data-i18n="heroText">Savanna Search brings African stories and open-web discovery into one clean, privacy-first home.</p>
+      <form id="heroSearch" class="heroSearch">
+        <span class="searchMark" aria-hidden="true">⌕</span>
+        <input id="heroInput" placeholder="Browse in confidence" autocomplete="off" aria-label="Savanna Search">
+        <button type="submit" data-i18n="searchButton">Savanna Search</button>
+      </form>
+      <div class="searchNote" data-i18n="searchNote">African-first search · latest news · visual stories</div>
+    </div>
 
-<div class="grid">
-<article class="panel"><div class="title"><h2>🌍 Africa & World</h2><button id="refreshNews">Refresh</button></div><div id="newsList"></div><small class="muted">Links open directly at publishers. This preview does not use a tracking proxy.</small></article>
-<article class="panel"><div class="title"><h2>🧭 Privacy Center</h2></div>
-<div class="row">Tracker blocking <b class="on">ON</b></div><div class="row">Ad blocking <b class="on">ON</b></div><div class="row">Cookie protection <b class="on">ON</b></div><div class="row">Local history <b id="historyCount">0</b></div>
-<button id="clearData" class="danger">Clear local browsing data</button></article>
-<article class="panel"><div class="title"><h2>🛡️ Security Hub</h2></div>
-<div class="resource"><span><b>OWASP Top 10</b><small>Web application security</small></span><button data-url="https://owasp.org/www-project-top-ten/">Open</button></div>
-<div class="resource"><span><b>OWASP API Security</b><small>API risks & defenses</small></span><button data-url="https://owasp.org/API-Security/">Open</button></div>
-<div class="resource"><span><b>NIST Cybersecurity</b><small>Security framework</small></span><button data-url="https://www.nist.gov/cyberframework">Open</button></div>
-</article>
-<article class="panel"><div class="title"><h2>⭐ Bookmarks</h2><button id="addBookmark">Add current</button></div><div id="bookmarkList"></div></article>
-</div>
-<div class="notice"><b>Private by design</b><span>This Netlify edition is a web/PWA test interface. A website cannot provide the same network-control powers as a native browser engine. Production SavannaGuard will enforce blocking at the browser layer.</span></div>
-</section>
+    <section id="searchResults" class="panel hidden">
+      <div class="title"><h2 data-i18n="searchResults">Search results</h2><button id="clearSearch" data-i18n="clear">Clear</button></div>
+      <div id="searchList" class="results"></div>
+    </section>
 
-<section id="webView" class="webview hidden"><div class="webhead"><span id="pageStatus">Ready</span><button id="openExternal">Open in browser</button></div>
-<div class="destination"><div>🌐</div><h2 id="destinationTitle">Ready to browse</h2><p id="destinationText">Choose “Open in browser” to visit the destination. This preview does not proxy or bypass iframe restrictions.</p><button id="destinationOpen" class="primary">Open destination</button></div></section>
+    <section class="newsSection">
+      <div class="sectionTitle">
+        <div><span class="eyebrow">SAVANNA SEARCH</span><h2 data-i18n="latestAfrica">Latest Africa</h2><p data-i18n="latestText">Fresh African stories ranked by relevance and interest, with visual cards where available.</p></div>
+        <div class="refreshBox"><span id="newsCountdown" class="muted">15:00</span><button id="refreshNews" class="smallButton" data-i18n="refresh">Refresh</button></div>
+      </div>
+      <div id="newsGrid" class="newsGrid" aria-live="polite"></div>
+      <div id="newsStatus" class="muted">Loading the latest African stories…</div>
+    </section>
+
+    <section class="homeTools">
+      <article class="panel compactPanel">
+        <div class="title"><h2 data-i18n="history">History</h2><button id="viewHistory" class="smallButton" data-i18n="view">View</button></div>
+        <div id="historyList" class="historyList"></div>
+        <button id="clearData" class="danger" data-i18n="clearBrowsing">Clear local browsing data</button>
+      </article>
+      <article class="panel compactPanel">
+        <div class="title"><h2 data-i18n="bookmarks">Bookmarks</h2><button id="addBookmark" class="smallButton" data-i18n="addCurrent">Add current</button></div>
+        <div id="bookmarkList"></div>
+      </article>
+    </section>
+  </section>
+
+  <section id="webView" class="webview hidden">
+    <div class="webhead"><span id="pageStatus">Ready</span><button id="openExternal" data-i18n="openBrowser">Open in browser</button></div>
+    <div class="destination"><div>🌐</div><h2 id="destinationTitle">Ready to browse</h2><p id="destinationText">Choose “Open in browser” to visit the destination.</p><button id="destinationOpen" class="primary" data-i18n="openDestination">Open destination</button></div>
+  </section>
 </main>
 
-<aside id="sideMenu"><div class="sidehead"><b>SavannaGuard</b><button id="closeMenu">×</button></div>
-<button data-action="home">⌂ Home</button><button data-action="bookmarks">★ Bookmarks</button><button data-action="history">◷ History</button><button data-action="settings">⚙ Settings</button><hr>
-<a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://owasp.org/" target="_blank" rel="noopener noreferrer">OWASP</a></aside><div id="scrim" class="scrim hidden"></div>
+<aside id="sideMenu" aria-label="SavannaGuard menu">
+  <div class="sidehead"><div><b>SavannaGuard</b><small data-i18n="tagline">Africa first · Privacy first · Open web</small></div><button id="closeMenu" aria-label="Close">×</button></div>
+  <button data-action="home">⌂ <span data-i18n="home">Home</span></button>
+  <button data-action="bookmark">★ <span data-i18n="addBookmark">Add bookmark</span></button>
+  <button data-action="homescreen">＋ <span data-i18n="addHome">Add to home screen</span></button>
+  <button data-action="desktop">▣ <span data-i18n="desktop">Desktop site</span></button>
+  <button data-action="share">↗ <span data-i18n="share">Share</span></button>
+  <button data-action="print">⎙ <span data-i18n="print">Print</span></button>
+  <button data-action="refresh">↻ <span data-i18n="refresh">Refresh</span></button>
+  <button data-action="report">⚠ <span data-i18n="report">Report broken site</span></button>
+  <button data-action="social">◎ <span data-i18n="social">Social media</span></button>
+  <button data-action="about">ⓘ <span data-i18n="about">About</span></button>
+</aside>
+<div id="scrim" class="scrim hidden"></div>
 
-<dialog id="settingsDialog"><form method="dialog" class="dialog"><div class="title"><h2>Settings</h2><button>×</button></div>
-<label>Language<select id="language"><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
-<label>Block ads <input id="adsToggle" type="checkbox" checked></label><label>Block trackers <input id="trackersToggle" type="checkbox" checked></label><label>Cookie popup protection <input id="cookieToggle" type="checkbox" checked></label>
-<button id="saveSettings" class="primary">Save settings</button></form></dialog>
-<footer>© 2026 SavannaGuard • Privacy-first open-source browser project</footer>
-<script src="app.js" defer></script>
-</body></html>
+<dialog id="socialDialog">
+  <div class="dialog">
+    <div class="title"><h2 data-i18n="social">Social media</h2><button id="closeSocial" aria-label="Close">×</button></div>
+    <p class="muted" data-i18n="socialText">Choose the services you want. Each opens in a new tab.</p>
+    <div id="socialGrid" class="socialGrid"></div>
+    <p class="muted socialNote" data-i18n="socialManage">You can hide shortcuts you do not use from this device.</p>
+  </div>
+</dialog>
+
+<dialog id="aboutDialog">
+  <div class="dialog">
+    <div class="title"><h2 data-i18n="about">About SavannaGuard</h2><button id="closeAbout" aria-label="Close">×</button></div>
+    <img src="/branding/savannaguard-logo-stacked.png" class="aboutLogo" alt="SavannaGuard">
+    <p data-i18n="aboutText"><b>SavannaGuard</b> is an Africa-first, privacy-first open-web browser project.</p>
+    <p data-i18n="aboutText2">We are building our own search, privacy and security layers rather than presenting unrelated services as browser features.</p>
+    <p class="contact"><b data-i18n="contact">Contact</b><br><a href="mailto:molich60@gmail.com">molich60@gmail.com</a></p>
+    <button id="closeAbout2" class="primary" data-i18n="close">Close</button>
+  </div>
+</dialog>
+
+<dialog id="settingsDialog">
+  <form method="dialog" class="dialog">
+    <div class="title"><h2 data-i18n="settings">Settings</h2><button aria-label="Close">×</button></div>
+    <label><span data-i18n="language">Language</span><select id="language"><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
+    <label><span data-i18n="profile">Local profile</span><select id="profileSelect"></select></label>
+    <div class="profileActions"><input id="profileName" maxlength="40" placeholder="New profile name"><button type="button" id="addProfile" class="smallButton">Add</button><button type="button" id="deleteProfile" class="smallButton">Delete</button></div>
+    <label><span data-i18n="ads">Block ads</span><input id="adsToggle" type="checkbox" checked></label>
+    <label><span data-i18n="trackers">Block trackers</span><input id="trackersToggle" type="checkbox" checked></label>
+    <label><span data-i18n="cookies">Cookie popup protection</span><input id="cookieToggle" type="checkbox" checked></label>
+    <p class="securityNote" data-i18n="vaultNote">Password vault: local encrypted storage only. Native Android will use the OS secure keystore in v0.4.</p>
+    <button id="saveSettings" class="primary" data-i18n="save">Save settings</button>
+  </form>
+</dialog>
+
+<footer>
+  <span data-i18n="footer">© 2026 SavannaGuard · Africa first · Privacy first · Open web</span>
+  <nav aria-label="Legal"><a href="/privacy.html" data-i18n="privacy">Privacy Policy</a><a href="/terms.html" data-i18n="terms">Terms &amp; Conditions</a><a href="mailto:molich60@gmail.com">molich60@gmail.com</a></nav>
+</footer>
+<script src="/app.js" defer></script>
+</body>
+</html>
