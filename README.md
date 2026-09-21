@@ -18,5 +18,8 @@ SavannaGuard is an open-source, privacy-first browser project. v0.4 concentrates
 ### Search-engine status
 Savanna Search is not yet a fully independent search index. v0.4 provides our own search interface/API/security/ranking foundation while using upstream discovery data. The next search-engine milestone is a Savanna crawler + index + ranking pipeline.
 
-<script src="https://liberapay.com/Developerteam/widgets/button.js"></script>
-<noscript><a href="https://liberapay.com/Developerteam/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
+<script src="https://liberapay.com/Developerteam/widgets/button.js">
+</script>
+<noscript><a href="https://liberapay.com/Developerteam/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg">
+</a>
+</noscript>
