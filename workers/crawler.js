@@ -1,4 +1,3 @@
-// 
 /**
  * Savanna Search — bounded sitemap crawler.
  * Deploy as a separate Cloudflare Worker with a Cron trigger.
@@ -33,10 +32,7 @@ function text(html) {
 }
 
 function title(html) {
-  const match = html.match(
-    /<title[^>]*>([\s\S]*?)<\/title>/i
-  );
-
+  const match = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
   return match ? text(match[1]).slice(0, 300) : "";
 }
 
@@ -50,12 +46,9 @@ function locs(xml) {
 async function allowed(url) {
   try {
     const parsed = new URL(url);
-    const response = await fetch(
-      `${parsed.origin}/robots.txt`,
-      {
-        headers: { "user-agent": USER_AGENT },
-      }
-    );
+    const response = await fetch(`${parsed.origin}/robots.txt`, {
+      headers: { "user-agent": USER_AGENT },
+    });
 
     // Fail closed when robots.txt cannot be checked.
     if (!response.ok) return false;
@@ -67,9 +60,7 @@ async function allowed(url) {
 
     if (!wildcardSection) return true;
 
-    return !/^\s*disallow:\s*\/\s*$/im.test(
-      wildcardSection
-    );
+    return !/^\s*disallow:\s*\/\s*$/im.test(wildcardSection);
   } catch {
     return false;
   }
@@ -106,16 +97,13 @@ export default {
 
         if (!sitemapResponse.ok) continue;
 
-        const sitemap = (
-          await sitemapResponse.text()
-        ).slice(0, 1_000_000);
+        const sitemap = (await sitemapResponse.text()).slice(0, 1_000_000);
 
         for (const url of locs(sitemap)) {
           if (documents.length >= MAX_URLS) break;
           if (visited.has(url)) continue;
 
           visited.add(url);
-
           if (!(await allowed(url))) continue;
 
           try {
@@ -125,15 +113,13 @@ export default {
 
             if (!response.ok) continue;
 
-            const contentType =
-              response.headers.get("content-type") || "";
-
+            const contentType = response.headers.get("content-type") || "";
             if (!contentType.includes("text/html")) continue;
 
-            const html = (
-              await response.text()
-            ).slice(0, MAX_BYTES);
-
+            // Note: this truncates after text() reads the response; it is not
+            // a hard network-download limit. Add streaming byte limits before
+            // production-scale crawling.
+            const html = (await response.text()).slice(0, MAX_BYTES);
             const body = text(html);
 
             documents.push({
@@ -164,7 +150,6 @@ export default {
     }
 
     const ingestUrl = http(env.INGEST_URL);
-
     if (!ingestUrl) {
       console.error("INGEST_URL must be a valid HTTP(S) URL.");
       return;
@@ -181,16 +166,11 @@ export default {
       });
 
       if (!response.ok) {
-        console.error(
-          "Ingestion failed with HTTP status:",
-          response.status
-        );
+        console.error("Ingestion failed with HTTP status:", response.status);
         return;
       }
 
-      console.log(
-        `Crawler finished: submitted ${documents.length} documents.`
-      );
+      console.log(`Crawler finished: submitted ${documents.length} documents.`);
     } catch (error) {
       console.error(
         "Ingestion request failed:",
