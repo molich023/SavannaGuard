@@ -1,7 +1,1 @@
-{
-  "name":"savannaguard-browser",
-  "version":"0.5.0",
-  "private":true,
-  "description":"SavannaGuard — Africa first, privacy first, open web",
-  "scripts":{"test":"node --check web/app.js && node --check functions/api/search.js && node --check functions/api/news.js && node --check functions/api/ingest.js && node --check workers/crawler.js"}
-}
+
