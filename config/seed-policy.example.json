@@ -1,1 +1,19 @@
-
+{
+  "description": "Approved seed policy for Savanna Search. Replace examples with sources you have permission and a defensible reason to crawl.",
+  "seeds": [
+    {"url": "https://example.africa/sitemap.xml", "country": "", "language": "", "priority": 10}
+  ],
+  "limits": {
+    "max_seeds": 100,
+    "max_pages_per_run": 100,
+    "max_page_bytes": 262144,
+    "max_concurrency_per_host": 1
+  },
+  "policy": {
+    "respect_robots": true,
+    "https_preferred": true,
+    "follow_redirects": true,
+    "store_raw_html": false,
+    "store_personal_data": false
+  }
+}
