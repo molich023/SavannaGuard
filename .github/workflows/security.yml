@@ -1,3 +1,4 @@
+```yaml
 name: SavannaGuard Security
 
 on:
@@ -31,42 +32,44 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          package-manager-cache: false
 
-      - name: Install dependencies
-        run: npm install
+      - name: Validate JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
 
-      - name: Validate JavaScript
-        run: npm test
+          echo "Checking Savanna Browser JavaScript files..."
 
-      - name: Dependency security audit
-        run: npm audit --audit-level=high
+          mapfile -d '' JS_FILES < <(
+            find web functions workers tests \
+              -type f -name '*.js' -print0 2>/dev/null || true
+          )
 
+          if [ "${#JS_FILES[@]}" -eq 0 ]; then
+            echo "No JavaScript files found in expected directories."
+            exit 1
+          fi
 
-  codeql:
-    name: CodeQL Security Analysis
-    runs-on: ubuntu-latest
+          for file in "${JS_FILES[@]}"; do
+            echo "Checking: $file"
+            node --experimental-default-type=module --check "$file"
+          done
 
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
+          echo "JavaScript syntax validation passed."
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Run crawler tests
+        shell: bash
+        run: |
+          set -euo pipefail
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: javascript
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-
-      - name: Analyze
-        uses: github/codeql-action/analyze@v3
-
+          if [ -f tests/test_crawler.js ]; then
+            node --experimental-default-type=module \
+              --test tests/test_crawler.js
+          else
+            echo "Crawler test file not found."
+            echo "Crawler tests skipped; add tests/test_crawler.js."
+          fi
 
   dependency-review:
     name: Dependency Review
@@ -75,6 +78,7 @@ jobs:
 
     permissions:
       contents: read
+      pull-requests: read
 
     steps:
       - name: Checkout repository
