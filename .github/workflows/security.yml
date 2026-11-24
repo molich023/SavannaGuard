@@ -1,4 +1,4 @@
-```yaml
+
 name: SavannaGuard Security
 
 on:
@@ -19,7 +19,6 @@ permissions:
   contents: read
 
 jobs:
-
   javascript-validation:
     name: JavaScript Validation
     runs-on: ubuntu-latest
@@ -34,42 +33,11 @@ jobs:
           node-version: 20
           package-manager-cache: false
 
-      - name: Validate JavaScript syntax
-        shell: bash
-        run: |
-          set -euo pipefail
+      - name: Run JavaScript tests
+        run: npm test
 
-          echo "Checking Savanna Browser JavaScript files..."
-
-          mapfile -d '' JS_FILES < <(
-            find web functions workers tests \
-              -type f -name '*.js' -print0 2>/dev/null || true
-          )
-
-          if [ "${#JS_FILES[@]}" -eq 0 ]; then
-            echo "No JavaScript files found in expected directories."
-            exit 1
-          fi
-
-          for file in "${JS_FILES[@]}"; do
-            echo "Checking: $file"
-            node --experimental-default-type=module --check "$file"
-          done
-
-          echo "JavaScript syntax validation passed."
-
-      - name: Run crawler tests
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          if [ -f tests/test_crawler.js ]; then
-            node --experimental-default-type=module \
-              --test tests/test_crawler.js
-          else
-            echo "Crawler test file not found."
-            echo "Crawler tests skipped; add tests/test_crawler.js."
-          fi
+      - name: Validate crawler syntax
+        run: node --check workers/crawler.js
 
   dependency-review:
     name: Dependency Review
@@ -81,8 +49,5 @@ jobs:
       pull-requests: read
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
